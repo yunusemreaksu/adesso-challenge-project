@@ -1,5 +1,7 @@
 import { Box, Slider } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getUnitsFetch } from "../../state/units-state";
 import classes from "../../style/Units/Units.module.css";
 import NavBar from "../NavBar/NavBar";
 
@@ -40,6 +42,15 @@ const Units = () => {
   const valueText = (value) => {
     return `${value}`;
   };
+
+  const data = useSelector((state) => state.units.units);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getUnitsFetch());
+  }, [dispatch]);
+
+  console.log(data.units);
 
   return (
     <>
