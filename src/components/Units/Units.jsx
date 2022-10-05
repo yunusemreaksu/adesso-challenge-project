@@ -1,6 +1,7 @@
 import { Box, Slider } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { getUnitsFetch } from "../../state/units-state";
 import classes from "../../style/Units/Units.module.css";
 import NavBar from "../NavBar/NavBar";
@@ -50,12 +51,22 @@ const Units = () => {
     dispatch(getUnitsFetch());
   }, [dispatch]);
 
-  console.log(data.units);
+  if (data.length === 0) {
+    console.log("Empty!");
+  } else {
+    console.log(data);
+  }
+
+  if (data.units === undefined) {
+    console.log("Undefined!");
+  } else {
+    console.log(data.units[0]["cost"]["Wood"]);
+  }
 
   return (
     <>
       <NavBar name={"Units Page"} />
-      <div>
+      <div className={classes.main_container}>
         <div>
           <h4>Ages</h4>
           {agesArray.map((age) => (
@@ -145,6 +156,20 @@ const Units = () => {
               <th>Age</th>
               <th>Costs</th>
             </tr>
+            {data.units !== undefined ? (
+              data.units.map((unit) => (
+                <tr key={unit.id}>
+                  <td>{unit.id}</td>
+                  <td>
+                    <Link to={`/unitdetails/${unit.id}`}>{unit.name}</Link>
+                  </td>
+                  <td>{unit.age}</td>
+                  <td>{JSON.stringify(unit.cost, null, 2)}</td>
+                </tr>
+              ))
+            ) : (
+              <td>Error!</td>
+            )}
           </table>
         </div>
       </div>

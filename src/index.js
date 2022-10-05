@@ -29,6 +29,10 @@ const router = createBrowserRouter([
     path: "units",
     element: <Units />,
   },
+  {
+    path: "unitdetails/:id",
+    element: <UnitDetails />,
+  },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
