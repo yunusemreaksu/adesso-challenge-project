@@ -10,6 +10,7 @@ const Units = () => {
   const [isWoodChecked, setIsWoodChecked] = useState(false);
   const [isFoodChecked, setIsFoodChecked] = useState(false);
   const [isGoldChecked, setIsGoldChecked] = useState(false);
+  const [filteredAges, setFilteredAges] = useState(null);
 
   const checkWoodHandler = () => {
     setIsWoodChecked(!isWoodChecked);
@@ -22,8 +23,6 @@ const Units = () => {
   const checkGoldHandler = () => {
     setIsGoldChecked(!isGoldChecked);
   };
-
-  const agesArray = ["All", "Dark", "Feudal", "Castle", "Imperial"];
 
   const marks = [
     {
@@ -63,15 +62,61 @@ const Units = () => {
     console.log(data.units[0]["cost"]["Wood"]);
   }
 
+  const buttons = [
+    {
+      name: "All",
+      value: "All",
+    },
+    {
+      name: "Dark",
+      value: "Dark",
+    },
+    {
+      name: "Feudal",
+      value: "Feudal",
+    },
+    {
+      name: "Castle",
+      value: "Castle",
+    },
+    {
+      name: "Imperial",
+      value: "Imperial",
+    },
+  ];
+
+  useEffect(() => {
+    setFilteredAges(data.units);
+  }, [data.units]);
+
+  const filterUnits = (filteredAge) => {
+    const filteredUnits = data.units.filter((unit) => unit.age === filteredAge);
+    return filteredUnits;
+  };
+
+  const handleAgeClick = (event) => {
+    const ageName = event.target.value;
+    ageName !== "All"
+      ? setFilteredAges(filterUnits(ageName))
+      : setFilteredAges(data.units);
+  };
+
   return (
     <>
       <NavBar name={"Units Page"} />
       <div className={classes.main_container}>
         <div>
           <h4>Ages</h4>
-          {agesArray.map((age) => (
-            <button key={age}>{age}</button>
-          ))}
+          {buttons &&
+            buttons.map((button) => (
+              <button
+                key={button.value}
+                value={button.value}
+                onClick={handleAgeClick}
+              >
+                {button.name}
+              </button>
+            ))}
         </div>
         <div>
           <h4>Costs</h4>
@@ -150,26 +195,30 @@ const Units = () => {
         <div>
           <h4>Units List</h4>
           <table>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Age</th>
-              <th>Costs</th>
-            </tr>
-            {data.units !== undefined ? (
-              data.units.map((unit) => (
-                <tr key={unit.id}>
-                  <td>{unit.id}</td>
-                  <td>
-                    <Link to={`/unitdetails/${unit.id}`}>{unit.name}</Link>
-                  </td>
-                  <td>{unit.age}</td>
-                  <td>{JSON.stringify(unit.cost, null, 2)}</td>
-                </tr>
-              ))
-            ) : (
-              <td>Error!</td>
-            )}
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Costs</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredAges ? (
+                filteredAges.map((unit) => (
+                  <tr key={unit.id}>
+                    <td>{unit.id}</td>
+                    <td>
+                      <Link to={`/unitdetails/${unit.id}`}>{unit.name}</Link>
+                    </td>
+                    <td>{unit.age}</td>
+                    <td>{JSON.stringify(unit.cost, null, 2)}</td>
+                  </tr>
+                ))
+              ) : (
+                <td>Error!</td>
+              )}
+            </tbody>
           </table>
         </div>
       </div>
