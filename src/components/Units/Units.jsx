@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { getUnitsFetch } from "../../state/units-state";
 import classes from "../../style/Units/Units.module.css";
 import NavBar from "../NavBar/NavBar";
+import AgeFilter from "./AgeFilter/AgeFilter";
 
 const Units = () => {
   const [isWoodChecked, setIsWoodChecked] = useState(false);
@@ -50,62 +51,15 @@ const Units = () => {
     dispatch(getUnitsFetch());
   }, [dispatch]);
 
-  const buttons = [
-    {
-      name: "All",
-      value: "All",
-    },
-    {
-      name: "Dark",
-      value: "Dark",
-    },
-    {
-      name: "Feudal",
-      value: "Feudal",
-    },
-    {
-      name: "Castle",
-      value: "Castle",
-    },
-    {
-      name: "Imperial",
-      value: "Imperial",
-    },
-  ];
-
   useEffect(() => {
     setFilteredAges(data.units);
   }, [data.units]);
-
-  const filterUnits = (filteredAge) => {
-    const filteredUnits = data.units.filter((unit) => unit.age === filteredAge);
-    return filteredUnits;
-  };
-
-  const handleAgeClick = (event) => {
-    const ageName = event.target.value;
-    ageName !== "All"
-      ? setFilteredAges(filterUnits(ageName))
-      : setFilteredAges(data.units);
-  };
 
   return (
     <>
       <NavBar name={"Units Page"} />
       <div className={classes.main_container}>
-        <div>
-          <h4>Ages</h4>
-          {buttons &&
-            buttons.map((button) => (
-              <button
-                key={button.value}
-                value={button.value}
-                onClick={handleAgeClick}
-              >
-                {button.name}
-              </button>
-            ))}
-        </div>
+        <AgeFilter data={data} setFilteredAges={setFilteredAges} />
         <div>
           <h4>Costs</h4>
           <form>
