@@ -50,18 +50,6 @@ const Units = () => {
     dispatch(getUnitsFetch());
   }, [dispatch]);
 
-  if (data.length === 0) {
-    console.log("Empty!");
-  } else {
-    console.log(data);
-  }
-
-  if (data.units === undefined) {
-    console.log("Undefined!");
-  } else {
-    console.log(data.units[0]["cost"]["Wood"]);
-  }
-
   const buttons = [
     {
       name: "All",
@@ -204,7 +192,7 @@ const Units = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredAges ? (
+              {filteredAges !== undefined && filteredAges !== null ? (
                 filteredAges.map((unit) => (
                   <tr key={unit.id}>
                     <td>{unit.id}</td>
@@ -212,7 +200,18 @@ const Units = () => {
                       <Link to={`/unitdetails/${unit.id}`}>{unit.name}</Link>
                     </td>
                     <td>{unit.age}</td>
-                    <td>{JSON.stringify(unit.cost, null, 2)}</td>
+                    <div>
+                      {unit.cost !== undefined && unit.cost !== null ? (
+                        Object.entries(unit.cost).map(([key, value]) => (
+                          <td key={key}>
+                            {key + ": "}
+                            {value}
+                          </td>
+                        ))
+                      ) : (
+                        <p>No cost data to show!</p>
+                      )}
+                    </div>
                   </tr>
                 ))
               ) : (
