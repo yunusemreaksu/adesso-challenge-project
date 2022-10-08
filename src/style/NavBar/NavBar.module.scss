@@ -3,8 +3,11 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px;
-  border-style: solid;
+  border-bottom: 1px solid;
+
+  .header_name {
+    padding-left: 0.5rem;
+  }
 
   .link_container {
     display: flex;
@@ -12,6 +15,7 @@
 
     .link {
       margin: 1rem;
+      text-decoration: none;
     }
   }
 }

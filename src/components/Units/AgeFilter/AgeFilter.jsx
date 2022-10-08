@@ -36,7 +36,7 @@ const AgeFilter = ({ data, setFilteredAges }) => {
       : setFilteredAges(data.units);
   };
   return (
-    <div>
+    <div className={classes.main_container}>
       <h4>Ages</h4>
       <div className={classes.button_group}>
         {buttons &&

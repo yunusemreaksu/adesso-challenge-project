@@ -3,8 +3,10 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px;
-  border-style: solid;
+  border-bottom: 1px solid;
+}
+.nav_container .header_name {
+  padding-left: 0.5rem;
 }
 .nav_container .link_container {
   display: flex;
@@ -12,4 +14,5 @@
 }
 .nav_container .link_container .link {
   margin: 1rem;
+  text-decoration: none;
 }/*# sourceMappingURL=Navbar.module.css.map */

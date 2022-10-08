@@ -1,14 +1,13 @@
-.button_group {
+.main_container .button_group {
   display: flex;
 }
-
-.button {
+.main_container .button_group .button {
   margin: 0.1rem;
   padding: 0.3rem;
   border-radius: 8px;
   border-width: 1px;
 }
-.button:hover {
+.main_container .button_group .button:hover {
   cursor: pointer;
   background-color: antiquewhite;
   box-shadow: 1px 1px;

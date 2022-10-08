@@ -3,7 +3,7 @@ import classes from "../../style/Navbar/Navbar.module.css";
 const Navbar = ({ name }) => {
   return (
     <nav className={classes.nav_container}>
-      <h2>{name}</h2>
+      <h2 className={classes.header_name}>{name}</h2>
       <div className={classes.link_container}>
         <a href="/" className={classes.link}>
           HOME
