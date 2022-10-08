@@ -14,4 +14,13 @@
 }
 .main_container .cost_cell_container .cost_cell {
   border-style: none;
+}
+.main_container .not_found_warning {
+  border-style: none;
+}
+.main_container .slider_container {
+  display: flex;
+}
+.main_container .slider_container .value_counter {
+  padding-left: 1rem;
 }/*# sourceMappingURL=Units.module.css.map */
