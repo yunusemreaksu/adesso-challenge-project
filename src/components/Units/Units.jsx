@@ -87,7 +87,7 @@ const Units = () => {
     setFilteredAges(data.units);
   }, [data.units]);
 
-  // newfilterByCost:
+  // Filter by cost logic:
   const filterByCost = useCallback(
     (filteredWood, filteredFood, filteredGold) => {
       // Wood && Food:
@@ -142,20 +142,7 @@ const Units = () => {
         filteredFood === (null || 0) &&
         filteredGold === (null || 0)
       ) {
-        console.log(
-          // Object.keys(data.units
-          //   .filter((unit) => unit.cost)
-          //   .filter((item) => item.cost.Wood === filteredWood)
-          //   .map((i) => i.cost)[0]).length
-          data.units
-            .filter((unit) => unit.cost)
-            .filter((item) => item.cost.Wood === filteredWood)
-            .filter((i) => Object.keys(i.cost).length === 1)
-          // .map((i) => i.cost)
-          // .map((x) => Object.keys(x).length)
-          // .filter((y) => y === 1)
-        );
-        data.units
+        return data.units
           .filter((unit) => unit.cost)
           .filter((item) => item.cost.Wood === filteredWood)
           .filter((i) => Object.keys(i.cost).length === 1);
@@ -168,13 +155,7 @@ const Units = () => {
         filteredFood !== (null || 0) &&
         filteredGold === (null || 0)
       ) {
-        console.log(
-          data.units
-            .filter((unit) => unit.cost)
-            .filter((item) => item.cost.Food === filteredFood)
-            .filter((i) => Object.keys(i.cost).length === 1)
-        );
-        data.units
+        return data.units
           .filter((unit) => unit.cost)
           .filter((item) => item.cost.Food === filteredFood)
           .filter((i) => Object.keys(i.cost).length === 1);
@@ -187,13 +168,7 @@ const Units = () => {
         filteredFood === (null || 0) &&
         filteredGold !== (null || 0)
       ) {
-        console.log(
-          data.units
-            .filter((unit) => unit.cost)
-            .filter((item) => item.cost.Gold === filteredGold)
-            .filter((i) => Object.keys(i.cost).length === 1)
-        );
-        data.units
+        return data.units
           .filter((unit) => unit.cost)
           .filter((item) => item.cost.Gold === filteredGold)
           .filter((i) => Object.keys(i.cost).length === 1);
@@ -211,33 +186,6 @@ const Units = () => {
     },
     [data.units]
   );
-
-  // console.log(filterByCost(null, null, null));
-
-  // console.log(+stateCost.woodValue);
-
-  // useEffect(() => {
-  //   console.log(
-  //     filterByCost(
-  //       stateCost.woodValue,
-  //       stateCost.foodValue,
-  //       stateCost.goldValue
-  //     )
-  //   );
-  // }, [
-  //   stateCost.woodValue,
-  //   stateCost.foodValue,
-  //   stateCost.goldValue,
-  //   filterByCost,
-  // ]);
-
-  // console.log(
-  //   filterByCost(
-  //     +stateCost.woodValue,
-  //     +stateCost.foodValue,
-  //     +stateCost.goldValue
-  //   )
-  // );
 
   useEffect(() => {
     setCostFilter(
