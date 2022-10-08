@@ -235,7 +235,7 @@ const Units = () => {
                     }
                   />
                   <p className={classes.value_counter}>
-                    Wood value is: {stateCost.woodValue}
+                    Wood value is: <b>{stateCost.woodValue}</b>
                   </p>
                 </div>
               )}
@@ -264,7 +264,7 @@ const Units = () => {
                     }
                   />
                   <p className={classes.value_counter}>
-                    Food value is: {stateCost.foodValue}
+                    Food value is: <b>{stateCost.foodValue}</b>
                   </p>
                 </div>
               )}
@@ -293,7 +293,7 @@ const Units = () => {
                     }
                   />
                   <p className={classes.value_counter}>
-                    Gold value is: {stateCost.goldValue}
+                    Gold value is: <b>{stateCost.goldValue}</b>
                   </p>
                 </div>
               )}
