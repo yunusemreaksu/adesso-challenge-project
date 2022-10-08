@@ -1,6 +1,6 @@
-import classes from "../../style/NavBar/NavBar.module.css";
+import classes from "../../style/Navbar/Navbar.module.css";
 
-const NavBar = ({ name }) => {
+const Navbar = ({ name }) => {
   return (
     <nav className={classes.nav_container}>
       <h2>{name}</h2>
@@ -16,4 +16,4 @@ const NavBar = ({ name }) => {
   );
 };
 
-export default NavBar;
+export default Navbar;

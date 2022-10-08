@@ -1,10 +1,9 @@
 .main_container {
   margin: 1rem;
 }
-
-table,
-td,
-th {
+.main_container table,
+.main_container td,
+.main_container th {
   border: 1px solid black;
   padding: 0.5rem;
 }/*# sourceMappingURL=UnitDetails.module.css.map */

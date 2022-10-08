@@ -1,10 +1,20 @@
 .main_container {
+  display: flex;
+  flex-direction: column;
   margin: 1rem;
-}
 
-table,
-td,
-th {
-  border: 1px solid black;
-  padding: 0.5rem;
+  table,
+  td,
+  th {
+    border: 1px solid black;
+    padding: 0.5rem;
+  }
+
+  .cost_cell_container {
+    border: 1px solid black;
+
+    .cost_cell {
+      border-style: none;
+    }
+  }
 }

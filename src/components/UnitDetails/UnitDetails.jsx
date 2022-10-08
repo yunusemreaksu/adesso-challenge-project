@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import classes from "../../style/UnitDetails/UnitDetails.module.css";
-import NavBar from "../NavBar/NavBar";
+import Navbar from "../Navbar/Navbar";
 
 const UnitDetails = () => {
   let params = useParams();
@@ -13,7 +13,7 @@ const UnitDetails = () => {
 
   return (
     <>
-      <NavBar name={"Unit Details Page"} />
+      <Navbar name={"Unit Details Page"} />
       <div className={classes.main_container}>
         <table>
           <tr>

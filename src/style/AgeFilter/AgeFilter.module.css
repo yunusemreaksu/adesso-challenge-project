@@ -1,1 +1,15 @@
-/*# sourceMappingURL=AgeFilter.module.css.map */
+.button_group {
+  display: flex;
+}
+
+.button {
+  margin: 0.1rem;
+  padding: 0.3rem;
+  border-radius: 8px;
+  border-width: 1px;
+}
+.button:hover {
+  cursor: pointer;
+  background-color: antiquewhite;
+  box-shadow: 1px 1px;
+}/*# sourceMappingURL=AgeFilter.module.css.map */

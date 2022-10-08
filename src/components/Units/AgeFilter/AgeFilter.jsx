@@ -38,16 +38,19 @@ const AgeFilter = ({ data, setFilteredAges }) => {
   return (
     <div>
       <h4>Ages</h4>
-      {buttons &&
-        buttons.map((button) => (
-          <button
-            key={button.value}
-            value={button.value}
-            onClick={handleAgeClick}
-          >
-            {button.name}
-          </button>
-        ))}
+      <div className={classes.button_group}>
+        {buttons &&
+          buttons.map((button) => (
+            <button
+              key={button.value}
+              className={classes.button}
+              value={button.value}
+              onClick={handleAgeClick}
+            >
+              {button.name}
+            </button>
+          ))}
+      </div>
     </div>
   );
 };

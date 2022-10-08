@@ -1,17 +1,53 @@
-import { Box, Slider } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getUnitsFetch } from "../../state/units-state";
 import classes from "../../style/Units/Units.module.css";
-import NavBar from "../NavBar/NavBar";
+import Navbar from "../Navbar/Navbar";
 import AgeFilter from "./AgeFilter/AgeFilter";
 
+const initialCostState = {
+  woodValue: null,
+  foodValue: null,
+  goldValue: null,
+};
+
+function costReducer(state, action) {
+  switch (action.type) {
+    case "wood_changed":
+      return {
+        ...state,
+        woodValue: action.newWoodValue,
+      };
+    case "food_changed":
+      return {
+        ...state,
+        foodValue: action.newFoodValue,
+      };
+    case "gold_changed":
+      return {
+        ...state,
+        goldValue: action.newGoldValue,
+      };
+    default: {
+      throw Error("Unknown Action!");
+    }
+  }
+}
+
 const Units = () => {
+  const data = useSelector((state) => state.units.units);
+  const dispatchFn = useDispatch();
+
   const [isWoodChecked, setIsWoodChecked] = useState(false);
   const [isFoodChecked, setIsFoodChecked] = useState(false);
   const [isGoldChecked, setIsGoldChecked] = useState(false);
+
   const [filteredAges, setFilteredAges] = useState(null);
+
+  const [stateCost, dispatchCost] = useReducer(costReducer, initialCostState);
+
+  const [costFilter, setCostFilter] = useState(null);
 
   const checkWoodHandler = () => {
     setIsWoodChecked(!isWoodChecked);
@@ -25,44 +61,135 @@ const Units = () => {
     setIsGoldChecked(!isGoldChecked);
   };
 
-  const marks = [
-    {
-      value: 0,
-      label: "0",
-    },
-    {
-      value: 100,
-      label: "100",
-    },
-    {
-      value: 200,
-      label: "200",
-    },
-  ];
-
-  const valueText = (value) => {
-    return `${value}`;
-  };
-
-  const data = useSelector((state) => state.units.units);
-  const dispatch = useDispatch();
-
   useEffect(() => {
-    dispatch(getUnitsFetch());
-  }, [dispatch]);
+    dispatchFn(getUnitsFetch());
+  }, [dispatchFn]);
 
   useEffect(() => {
     setFilteredAges(data.units);
   }, [data.units]);
 
+  // Filter by Cost logic ile user input birleşimi
+  const filterByCost = useCallback(
+    (filteredWood, filteredFood, filteredGold) => {
+      const filteredByCost =
+        data.units && filteredWood && filteredFood
+          ? data.units
+              .filter((unit) => unit.cost)
+              .filter(
+                (item) =>
+                  item.cost.Wood === filteredWood &&
+                  item.cost.Food === filteredFood
+              )
+          : data.units && filteredWood && filteredGold
+          ? data.units
+              .filter((unit) => unit.cost)
+              .filter(
+                (item) =>
+                  item.cost.Wood === filteredWood &&
+                  item.cost.Gold === filteredGold
+              )
+          : data.units && filteredFood && filteredGold
+          ? data.units
+              .filter((unit) => unit.cost)
+              .filter(
+                (item) =>
+                  item.cost.Food === filteredFood &&
+                  item.cost.Gold === filteredGold
+              )
+          : data.units &&
+            filteredWood &&
+            filteredFood === null &&
+            filteredGold === null
+          ? data.units
+              .filter((unit) => unit.cost)
+              .filter((item) => item.cost.Wood === filteredWood)
+          : data.units &&
+            filteredWood === null &&
+            filteredFood &&
+            filteredGold === null
+          ? data.units
+              .filter((unit) => unit.cost)
+              .filter((item) => item.cost.Food === filteredFood)
+          : data.units &&
+            filteredWood === null &&
+            filteredFood === null &&
+            filteredGold
+          ? data.units
+              .filter((unit) => unit.cost)
+              .filter((item) => item.cost.Gold === filteredGold)
+          : data.units &&
+            filteredWood === null &&
+            filteredFood === null &&
+            filteredGold === null
+          ? data.units.filter((unit) => unit.cost === null)
+          : null;
+
+      return filteredByCost;
+    },
+    [data.units]
+  );
+
+  console.log(filterByCost(40, null, 70));
+
+  console.log(+stateCost.woodValue);
+
+  // useEffect(() => {
+  //   console.log(
+  //     filterByCost(
+  //       stateCost.woodValue,
+  //       stateCost.foodValue,
+  //       stateCost.goldValue
+  //     )
+  //   );
+  // }, [
+  //   stateCost.woodValue,
+  //   stateCost.foodValue,
+  //   stateCost.goldValue,
+  //   filterByCost,
+  // ]);
+
+  // console.log(
+  //   filterByCost(stateCost.woodValue, stateCost.foodValue, stateCost.goldValue)
+  // );
+
+  useEffect(() => {
+    setCostFilter(
+      filterByCost(
+        +stateCost.woodValue,
+        +stateCost.foodValue,
+        +stateCost.goldValue
+      )
+    );
+  }, [
+    stateCost.woodValue,
+    stateCost.foodValue,
+    stateCost.goldValue,
+    filterByCost,
+  ]);
+
+  // Bu useEffect olmazsa slider her kaydığında value'dan önce undefined basıyor
+  // useEffect(() => {
+  //   setWoodValue(woodValue);
+  // }, [woodValue]);
+
+  // // Bunda yine de undefined basıyor
+  // useEffect(() => {
+  //   setFoodValue();
+  // }, []);
+
+  // useEffect(() => {
+  //   setGoldValue();
+  // }, []);
+
   return (
     <>
-      <NavBar name={"Units Page"} />
+      <Navbar name={"Units Page"} />
       <div className={classes.main_container}>
         <AgeFilter data={data} setFilteredAges={setFilteredAges} />
         <div>
           <h4>Costs</h4>
-          <form>
+          <div>
             <div>
               <input
                 type="checkbox"
@@ -72,18 +199,24 @@ const Units = () => {
               />
               <label htmlFor="wood">Wood</label>
               {isWoodChecked && (
-                <Box sx={{ width: 200 }}>
-                  <Slider
-                    aria-label="Always visible"
-                    defaultValue={100}
-                    getAriaValueText={valueText}
+                <div>
+                  <input
+                    type={"range"}
                     min={0}
                     max={200}
                     step={5}
-                    marks={marks}
-                    valueLabelDisplay="on"
+                    value={stateCost.woodValue}
+                    onChange={(event) =>
+                      dispatchCost({
+                        type: "wood_changed",
+                        newWoodValue: event.target.value,
+                      })
+                    }
                   />
-                </Box>
+                  <p>Wood value is: {stateCost.woodValue}</p>
+                  {costFilter &&
+                    costFilter.map((item) => <p key={item.id}>{item.name}</p>)}
+                </div>
               )}
             </div>
             <div>
@@ -95,18 +228,22 @@ const Units = () => {
               />
               <label htmlFor="food">Food</label>
               {isFoodChecked && (
-                <Box sx={{ width: 200 }}>
-                  <Slider
-                    aria-label="Always visible"
-                    defaultValue={100}
-                    getAriaValueText={valueText}
+                <div>
+                  <input
+                    type={"range"}
                     min={0}
                     max={200}
                     step={5}
-                    marks={marks}
-                    valueLabelDisplay="on"
+                    value={stateCost.foodValue}
+                    onChange={(event) =>
+                      dispatchCost({
+                        type: "food_changed",
+                        newFoodValue: event.target.value,
+                      })
+                    }
                   />
-                </Box>
+                  <p>Food value is: {stateCost.foodValue}</p>
+                </div>
               )}
             </div>
             <div>
@@ -118,21 +255,25 @@ const Units = () => {
               />
               <label htmlFor="gold">Gold</label>
               {isGoldChecked && (
-                <Box sx={{ width: 200 }}>
-                  <Slider
-                    aria-label="Always visible"
-                    defaultValue={100}
-                    getAriaValueText={valueText}
+                <div>
+                  <input
+                    type={"range"}
                     min={0}
                     max={200}
                     step={5}
-                    marks={marks}
-                    valueLabelDisplay="on"
+                    value={stateCost.goldValue}
+                    onChange={(event) =>
+                      dispatchCost({
+                        type: "gold_changed",
+                        newGoldValue: event.target.value,
+                      })
+                    }
                   />
-                </Box>
+                  <p>Gold value is: {stateCost.goldValue}</p>
+                </div>
               )}
             </div>
-          </form>
+          </div>
         </div>
         <div>
           <h4>Units List</h4>
@@ -154,10 +295,10 @@ const Units = () => {
                       <Link to={`/unitdetails/${unit.id}`}>{unit.name}</Link>
                     </td>
                     <td>{unit.age}</td>
-                    <div>
+                    <div className={classes.cost_cell_container}>
                       {unit.cost !== undefined && unit.cost !== null ? (
                         Object.entries(unit.cost).map(([key, value]) => (
-                          <td key={key}>
+                          <td key={key} className={classes.cost_cell}>
                             {key + ": "}
                             {value}
                           </td>
@@ -172,6 +313,11 @@ const Units = () => {
                 <td>Error!</td>
               )}
             </tbody>
+            <div>
+              <p>costFilter:</p>
+              {costFilter &&
+                costFilter.map((item) => <p key={item.id}>{item.name}</p>)}
+            </div>
           </table>
         </div>
       </div>
