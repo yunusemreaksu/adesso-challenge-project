@@ -101,7 +101,7 @@ const Units = () => {
           .filter((unit) => unit.cost)
           .filter(
             (item) =>
-              item.cost.Wood === filteredWood && item.cost.Food === filteredFood
+              item.cost.Wood <= filteredWood && item.cost.Food <= filteredFood
           );
       }
 
@@ -116,7 +116,7 @@ const Units = () => {
           .filter((unit) => unit.cost)
           .filter(
             (item) =>
-              item.cost.Wood === filteredWood && item.cost.Gold === filteredGold
+              item.cost.Wood <= filteredWood && item.cost.Gold <= filteredGold
           );
       }
 
@@ -131,7 +131,7 @@ const Units = () => {
           .filter((unit) => unit.cost)
           .filter(
             (item) =>
-              item.cost.Food === filteredFood && item.cost.Gold === filteredGold
+              item.cost.Food <= filteredFood && item.cost.Gold <= filteredGold
           );
       }
 
@@ -144,7 +144,7 @@ const Units = () => {
       ) {
         return data.units
           .filter((unit) => unit.cost)
-          .filter((item) => item.cost.Wood === filteredWood)
+          .filter((item) => item.cost.Wood <= filteredWood)
           .filter((i) => Object.keys(i.cost).length === 1);
       }
 
@@ -157,7 +157,7 @@ const Units = () => {
       ) {
         return data.units
           .filter((unit) => unit.cost)
-          .filter((item) => item.cost.Food === filteredFood)
+          .filter((item) => item.cost.Food <= filteredFood)
           .filter((i) => Object.keys(i.cost).length === 1);
       }
 
@@ -170,7 +170,7 @@ const Units = () => {
       ) {
         return data.units
           .filter((unit) => unit.cost)
-          .filter((item) => item.cost.Gold === filteredGold)
+          .filter((item) => item.cost.Gold <= filteredGold)
           .filter((i) => Object.keys(i.cost).length === 1);
       }
 
