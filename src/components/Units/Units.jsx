@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getUnitsFetch } from "../../state/units-state";
-import classes from "../../style/Units/Units.module.css";
+import classes from "./Units.module.scss";
 import Navbar from "../Navbar/Navbar";
 import AgeFilter from "./AgeFilter/AgeFilter";
 

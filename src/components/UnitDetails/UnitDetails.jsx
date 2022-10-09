@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
-import classes from "../../style/UnitDetails/UnitDetails.module.css";
+import classes from "./UnitDetails.module.scss";
 import Navbar from "../Navbar/Navbar";
 
 const UnitDetails = () => {

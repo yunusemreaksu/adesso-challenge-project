@@ -1,29 +1,29 @@
-import classes from "../../../style/AgeFilter/AgeFilter.module.css";
+import classes from "./AgeFilter.module.scss";
+
+const BUTTONS = [
+  {
+    name: "All",
+    value: "All",
+  },
+  {
+    name: "Dark",
+    value: "Dark",
+  },
+  {
+    name: "Feudal",
+    value: "Feudal",
+  },
+  {
+    name: "Castle",
+    value: "Castle",
+  },
+  {
+    name: "Imperial",
+    value: "Imperial",
+  },
+];
 
 const AgeFilter = ({ data, setFilteredAges }) => {
-  const buttons = [
-    {
-      name: "All",
-      value: "All",
-    },
-    {
-      name: "Dark",
-      value: "Dark",
-    },
-    {
-      name: "Feudal",
-      value: "Feudal",
-    },
-    {
-      name: "Castle",
-      value: "Castle",
-    },
-    {
-      name: "Imperial",
-      value: "Imperial",
-    },
-  ];
-
   const filterUnits = (filteredAge) => {
     const filteredUnits = data.units.filter((unit) => unit.age === filteredAge);
     return filteredUnits;
@@ -39,8 +39,8 @@ const AgeFilter = ({ data, setFilteredAges }) => {
     <div className={classes.main_container}>
       <h4>Ages</h4>
       <div className={classes.button_group}>
-        {buttons &&
-          buttons.map((button) => (
+        {BUTTONS &&
+          BUTTONS.map((button) => (
             <button
               key={button.value}
               className={classes.button}

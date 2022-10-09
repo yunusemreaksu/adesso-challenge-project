@@ -1,16 +1,17 @@
-import classes from "../../style/Navbar/Navbar.module.css";
+import { Link } from "react-router-dom";
+import classes from "./Navbar.module.scss";
 
 const Navbar = ({ name }) => {
   return (
     <nav className={classes.nav_container}>
       <h2 className={classes.header_name}>{name}</h2>
       <div className={classes.link_container}>
-        <a href="/" className={classes.link}>
+        <Link to="/" className={classes.link}>
           HOME
-        </a>
-        <a href="/units" className={classes.link}>
+        </Link>
+        <Link to="/units" className={classes.link}>
           UNITS
-        </a>
+        </Link>
       </div>
     </nav>
   );
