@@ -1,14 +1,26 @@
-import { call, put, takeEvery } from "redux-saga/effects";
-import { getUnitsSuccess } from "./units-state";
+import { call, put, all, takeLatest } from "redux-saga/effects";
+import { getUnitsSuccess, getUnitByIdSuccess } from "./units-state";
 
-function* workGetUnitsFetch() {
-  const units = yield call(() => fetch("age-of-empires-units.json"));
-  const formattedUnits = yield units.json();
-  yield put(getUnitsSuccess(formattedUnits));
+const fetchUnitsData = async () => {
+  const response = await fetch("/age-of-empires-units.json");
+  return response.json();
+};
+
+function* workerGetUnits() {
+  const response = yield call(fetchUnitsData);
+  yield put(getUnitsSuccess(response));
+}
+
+function* workerGetUnitById(action) {
+  const response = yield call(fetchUnitsData);
+  yield put(getUnitByIdSuccess({ response, id: action.payload }));
 }
 
 function* unitsSaga() {
-  yield takeEvery("units/getUnitsFetch", workGetUnitsFetch);
+  yield all([
+    takeLatest("units/getUnitsFetch", workerGetUnits),
+    takeLatest("units/getUnitById", workerGetUnitById),
+  ]);
 }
 
 export default unitsSaga;

@@ -4,6 +4,7 @@ export const unitsSlice = createSlice({
   name: "units",
   initialState: {
     units: [],
+    unitDetails: {},
     isLoading: false,
   },
   reducers: {
@@ -17,10 +18,29 @@ export const unitsSlice = createSlice({
     getUnitsFailure: (state) => {
       state.isLoading = false;
     },
+    getUnitById: (state) => {
+      state.isLoading = true;
+    },
+    getUnitByIdSuccess: (state, action) => {
+      const { id, response } = action.payload;
+      state.unitDetails = response.units
+        ? response.units.find((u) => u.id + "" === id)
+        : {};
+      state.isLoading = false;
+    },
+    getUnitByIdFailure: (state) => {
+      state.isLoading = false;
+    },
   },
 });
 
-export const { getUnitsFetch, getUnitsSuccess, getUnitsFailure } =
-  unitsSlice.actions;
+export const {
+  getUnitsFetch,
+  getUnitsSuccess,
+  getUnitsFailure,
+  getUnitById,
+  getUnitByIdSuccess,
+  getUnitByIdFailure,
+} = unitsSlice.actions;
 
 export default unitsSlice.reducer;

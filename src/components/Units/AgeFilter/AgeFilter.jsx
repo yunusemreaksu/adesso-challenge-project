@@ -1,6 +1,6 @@
 import classes from "./AgeFilter.module.scss";
 
-const BUTTONS = [
+const AGE_FILTERS = [
   {
     name: "All",
     value: "All",
@@ -23,33 +23,21 @@ const BUTTONS = [
   },
 ];
 
-const AgeFilter = ({ data, setFilteredAges }) => {
-  const filterUnits = (filteredAge) => {
-    const filteredUnits = data.units.filter((unit) => unit.age === filteredAge);
-    return filteredUnits;
-  };
-
-  const handleAgeClick = (event) => {
-    const ageName = event.target.value;
-    ageName !== "All"
-      ? setFilteredAges(filterUnits(ageName))
-      : setFilteredAges(data.units);
-  };
+const AgeFilter = ({ onChange }) => {
   return (
     <div className={classes.main_container}>
       <h4>Ages</h4>
       <div className={classes.button_group}>
-        {BUTTONS &&
-          BUTTONS.map((button) => (
-            <button
-              key={button.value}
-              className={classes.button}
-              value={button.value}
-              onClick={handleAgeClick}
-            >
-              {button.name}
-            </button>
-          ))}
+        {AGE_FILTERS.map((filter) => (
+          <button
+            key={filter.value}
+            className={classes.button}
+            value={filter.value}
+            onClick={() => onChange(filter.value)}
+          >
+            {filter.name}
+          </button>
+        ))}
       </div>
     </div>
   );

@@ -1,15 +1,19 @@
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router";
 import classes from "./UnitDetails.module.scss";
+import { getUnitById } from "../../state/units-state";
 import Navbar from "../Navbar/Navbar";
 
 const UnitDetails = () => {
   let params = useParams();
-  let paramsId = params.id - 1;
 
-  const data = useSelector((state) => state.units.units);
+  const details = useSelector((state) => state.units.unitDetails);
+  const dispatchFn = useDispatch();
 
-  const details = data.units[paramsId];
+  useEffect(() => {
+    dispatchFn(getUnitById(params.id));
+  }, [dispatchFn, params.id]);
 
   return (
     <>
@@ -34,27 +38,15 @@ const UnitDetails = () => {
           </tr>
           <tr>
             <th>Wood Cost:</th>
-            {details.cost !== null ? (
-              <td>{details.cost["Wood"]}</td>
-            ) : (
-              <td></td>
-            )}
+            {details.cost && <td>{details.cost["Wood"]}</td>}
           </tr>
           <tr>
             <th>Food Cost:</th>
-            {details.cost !== null ? (
-              <td>{details.cost["Food"]}</td>
-            ) : (
-              <td></td>
-            )}
+            {details.cost && <td>{details.cost["Food"]}</td>}
           </tr>
           <tr>
             <th>Gold Cost:</th>
-            {details.cost !== null ? (
-              <td>{details.cost["Gold"]}</td>
-            ) : (
-              <td></td>
-            )}
+            {details.cost && <td>{details.cost["Gold"]}</td>}
           </tr>
           <tr>
             <th>Build Time:</th>
