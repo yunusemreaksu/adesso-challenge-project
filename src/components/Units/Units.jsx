@@ -68,11 +68,11 @@ const Units = () => {
           (woodValue && unit.cost && unit.cost.Wood
             ? unit.cost.Wood <= woodValue
             : true) &&
-          (foodValue && unit.cost && unit.cost.Gold
-            ? unit.cost.Gold <= goldValue
-            : true) &&
-          (goldValue && unit.cost && unit.cost.Food
+          (foodValue && unit.cost && unit.cost.Food
             ? unit.cost.Food <= foodValue
+            : true) &&
+          (goldValue && unit.cost && unit.cost.Gold
+            ? unit.cost.Gold <= goldValue
             : true) &&
           (ageFilter === "All" || unit.age === ageFilter)
       );

@@ -11,7 +11,6 @@ const UnitDetails = () => {
   const details = useSelector((state) => state.units.unitDetails);
   const dispatchFn = useDispatch();
 
-  debugger;
   useEffect(() => {
     dispatchFn(getUnitById(params.id));
   }, [dispatchFn, params.id]);
