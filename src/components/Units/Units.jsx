@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useState, useReducer } from "react";
+import { useEffect, useState, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getUnitsFetch } from "../../state/units-state";
 import classes from "./Units.module.scss";
 import Navbar from "../Navbar/Navbar";
 import AgeFilter from "./AgeFilter/AgeFilter";
+import CostFilter from "./CostFilter/CostFilter";
 
 const initialCostState = {
   woodValue: null,
@@ -17,17 +18,17 @@ function costReducer(state, action) {
     case "wood_changed":
       return {
         ...state,
-        woodValue: action.newWoodValue,
+        woodValue: action.value,
       };
     case "food_changed":
       return {
         ...state,
-        foodValue: action.newFoodValue,
+        foodValue: action.value,
       };
     case "gold_changed":
       return {
         ...state,
-        goldValue: action.newGoldValue,
+        goldValue: action.value,
       };
     default: {
       throw Error("Unknown Action!");
@@ -39,44 +40,16 @@ const Units = () => {
   const data = useSelector((state) => state.units.units);
   const dispatchFn = useDispatch();
 
-  const [isWoodChecked, setIsWoodChecked] = useState(false);
-  const [isFoodChecked, setIsFoodChecked] = useState(false);
-  const [isGoldChecked, setIsGoldChecked] = useState(false);
+  const [ageFilter, setAgeFilter] = useState("All");
+  const [filteredData, setFilteredData] = useState([]);
+  const [costState, dispatchCost] = useReducer(costReducer, initialCostState);
+  const { woodValue, foodValue, goldValue } = costState;
 
-  const [filteredAges, setFilteredAges] = useState(null);
-
-  const [stateCost, dispatchCost] = useReducer(costReducer, initialCostState);
-
-  const [costFilter, setCostFilter] = useState(null);
-
-  const checkWoodHandler = () => {
-    setIsWoodChecked(!isWoodChecked);
-    if (isWoodChecked === false) {
-      return dispatchCost({
-        type: "wood_changed",
-        newWoodValue: null,
-      });
-    }
-  };
-
-  const checkFoodHandler = () => {
-    setIsFoodChecked(!isFoodChecked);
-    if (isFoodChecked === false) {
-      return dispatchCost({
-        type: "food_changed",
-        newfoodValue: null,
-      });
-    }
-  };
-
-  const checkGoldHandler = () => {
-    setIsGoldChecked(!isGoldChecked);
-    if (isGoldChecked === false) {
-      return dispatchCost({
-        type: "gold_changed",
-        newGoldValue: null,
-      });
-    }
+  const handleCostFilter = (type, value) => {
+    return dispatchCost({
+      type,
+      value,
+    });
   };
 
   useEffect(() => {
@@ -84,220 +57,52 @@ const Units = () => {
   }, [dispatchFn]);
 
   useEffect(() => {
-    setFilteredAges(data.units);
+    setFilteredData(data.units);
   }, [data.units]);
 
-  // Filter by cost logic:
-  const filterByCost = useCallback(
-    (filteredWood, filteredFood, filteredGold) => {
-      // Wood && Food:
-      if (
-        data.units &&
-        filteredWood !== (null || 0) &&
-        filteredFood !== (null || 0) &&
-        filteredGold === (null || 0)
-      ) {
-        return data.units
-          .filter((unit) => unit.cost)
-          .filter(
-            (item) =>
-              item.cost.Wood === filteredWood && item.cost.Food === filteredFood
-          );
-      }
-
-      // Wood && Gold:
-      if (
-        data.units &&
-        filteredWood !== (null || 0) &&
-        filteredFood === (null || 0) &&
-        filteredGold !== (null || 0)
-      ) {
-        return data.units
-          .filter((unit) => unit.cost)
-          .filter(
-            (item) =>
-              item.cost.Wood === filteredWood && item.cost.Gold === filteredGold
-          );
-      }
-
-      // Food && Gold:
-      if (
-        data.units &&
-        filteredWood === (null || 0) &&
-        filteredFood !== (null || 0) &&
-        filteredGold !== (null || 0)
-      ) {
-        return data.units
-          .filter((unit) => unit.cost)
-          .filter(
-            (item) =>
-              item.cost.Food === filteredFood && item.cost.Gold === filteredGold
-          );
-      }
-
-      // Wood only:
-      if (
-        data.units &&
-        filteredWood !== (null || 0) &&
-        filteredFood === (null || 0) &&
-        filteredGold === (null || 0)
-      ) {
-        return data.units
-          .filter((unit) => unit.cost)
-          .filter((item) => item.cost.Wood === filteredWood)
-          .filter((i) => Object.keys(i.cost).length === 1);
-      }
-
-      // Food only:
-      if (
-        data.units &&
-        filteredWood === (null || 0) &&
-        filteredFood !== (null || 0) &&
-        filteredGold === (null || 0)
-      ) {
-        return data.units
-          .filter((unit) => unit.cost)
-          .filter((item) => item.cost.Food === filteredFood)
-          .filter((i) => Object.keys(i.cost).length === 1);
-      }
-
-      // Gold only:
-      if (
-        data.units &&
-        filteredWood === (null || 0) &&
-        filteredFood === (null || 0) &&
-        filteredGold !== (null || 0)
-      ) {
-        return data.units
-          .filter((unit) => unit.cost)
-          .filter((item) => item.cost.Gold === filteredGold)
-          .filter((i) => Object.keys(i.cost).length === 1);
-      }
-
-      // Every cost is 0 || Null
-      if (
-        data.units &&
-        filteredWood === (null || 0) &&
-        filteredFood === (null || 0) &&
-        filteredGold === (null || 0)
-      ) {
-        return data.units.filter((unit) => unit.cost === null);
-      }
-    },
-    [data.units]
-  );
-
   useEffect(() => {
-    setCostFilter(
-      filterByCost(
-        +stateCost.woodValue,
-        +stateCost.foodValue,
-        +stateCost.goldValue
-      )
-    );
-  }, [
-    stateCost.woodValue,
-    stateCost.foodValue,
-    stateCost.goldValue,
-    filterByCost,
-  ]);
+    const newData =
+      data.units &&
+      data.units.filter(
+        (unit) =>
+          (woodValue && unit.cost && unit.cost.Wood
+            ? unit.cost.Wood <= woodValue
+            : true) &&
+          (foodValue && unit.cost && unit.cost.Gold
+            ? unit.cost.Gold <= goldValue
+            : true) &&
+          (goldValue && unit.cost && unit.cost.Food
+            ? unit.cost.Food <= foodValue
+            : true) &&
+          (ageFilter === "All" || unit.age === ageFilter)
+      );
+    setFilteredData(newData);
+  }, [woodValue, foodValue, goldValue, ageFilter, data.units]);
 
   return (
     <>
       <Navbar name={"Units Page"} />
       <div className={classes.main_container}>
-        <AgeFilter data={data} setFilteredAges={setFilteredAges} />
+        <AgeFilter onChange={(val) => setAgeFilter(val)} />
         <div>
           <h4>Costs</h4>
           <p>Units can have at most 2, at least 0 cost types!</p>
           <div>
-            <div>
-              <input
-                type="checkbox"
-                id="wood"
-                name="wood"
-                onClick={checkWoodHandler}
-              />
-              <label htmlFor="wood">Wood</label>
-              {isWoodChecked && (
-                <div className={classes.slider_container}>
-                  <input
-                    type={"range"}
-                    min={0}
-                    max={200}
-                    step={5}
-                    value={stateCost.woodValue}
-                    onChange={(event) =>
-                      dispatchCost({
-                        type: "wood_changed",
-                        newWoodValue: event.target.value,
-                      })
-                    }
-                  />
-                  <p className={classes.value_counter}>
-                    Wood value is: <b>{stateCost.woodValue}</b>
-                  </p>
-                </div>
-              )}
-            </div>
-            <div>
-              <input
-                type="checkbox"
-                id="food"
-                name="food"
-                onClick={checkFoodHandler}
-              />
-              <label htmlFor="food">Food</label>
-              {isFoodChecked && (
-                <div className={classes.slider_container}>
-                  <input
-                    type={"range"}
-                    min={0}
-                    max={200}
-                    step={5}
-                    value={stateCost.foodValue}
-                    onChange={(event) =>
-                      dispatchCost({
-                        type: "food_changed",
-                        newFoodValue: event.target.value,
-                      })
-                    }
-                  />
-                  <p className={classes.value_counter}>
-                    Food value is: <b>{stateCost.foodValue}</b>
-                  </p>
-                </div>
-              )}
-            </div>
-            <div>
-              <input
-                type="checkbox"
-                id="gold"
-                name="gold"
-                onClick={checkGoldHandler}
-              />
-              <label htmlFor="gold">Gold</label>
-              {isGoldChecked && (
-                <div className={classes.slider_container}>
-                  <input
-                    type={"range"}
-                    min={0}
-                    max={200}
-                    step={5}
-                    value={stateCost.goldValue}
-                    onChange={(event) =>
-                      dispatchCost({
-                        type: "gold_changed",
-                        newGoldValue: event.target.value,
-                      })
-                    }
-                  />
-                  <p className={classes.value_counter}>
-                    Gold value is: <b>{stateCost.goldValue}</b>
-                  </p>
-                </div>
-              )}
-            </div>
+            <CostFilter
+              initialValue={woodValue}
+              label="Wood"
+              onChange={(val) => handleCostFilter("wood_changed", val)}
+            ></CostFilter>
+            <CostFilter
+              initialValue={foodValue}
+              label="Food"
+              onChange={(val) => handleCostFilter("food_changed", val)}
+            ></CostFilter>
+            <CostFilter
+              initialValue={goldValue}
+              label="Gold"
+              onChange={(val) => handleCostFilter("gold_changed", val)}
+            ></CostFilter>
           </div>
         </div>
         <div>
@@ -312,37 +117,8 @@ const Units = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredAges !== undefined &&
-              filteredAges !== null &&
-              isWoodChecked === false &&
-              isFoodChecked === false &&
-              isGoldChecked === false ? (
-                filteredAges.map((unit) => (
-                  <tr key={unit.id}>
-                    <td>{unit.id}</td>
-                    <td>
-                      <Link to={`/unitdetails/${unit.id}`}>{unit.name}</Link>
-                    </td>
-                    <td>{unit.age}</td>
-                    <div className={classes.cost_cell_container}>
-                      {unit.cost !== undefined && unit.cost !== null ? (
-                        Object.entries(unit.cost).map(([key, value]) => (
-                          <td key={key} className={classes.cost_cell}>
-                            {key + ": "}
-                            {value}
-                          </td>
-                        ))
-                      ) : (
-                        <p>No cost data to show!</p>
-                      )}
-                    </div>
-                  </tr>
-                ))
-              ) : costFilter &&
-                (isWoodChecked === true ||
-                  isFoodChecked === true ||
-                  isGoldChecked === true) ? (
-                costFilter.map((unit) => (
+              {filteredData ? (
+                filteredData.map((unit) => (
                   <tr key={unit.id}>
                     <td>{unit.id}</td>
                     <td>
